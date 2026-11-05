@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+/* TC Hacks palette: a flat "Minneapolis at night" purple. No gradients. */
+@theme {
+  --color-night: #2e2950; /* page background, same as the skyline sky */
+  --color-night-deep: #1f1b38; /* footer, feature bands */
+  --color-panel: #352f5c; /* cards and forms */
+  --color-tint: #3a3466; /* chips, active nav, soft sections */
+  --color-field: #26223f; /* input background */
+  --color-line: #423b6b; /* hairline dividers */
+  --color-line-strong: #6e66a0; /* heavier rules, dashed outlines */
+  --color-ink: #f3f1fa; /* headings */
+  --color-body: #c9c4dd; /* paragraph text */
+  --color-muted: #b4aecb;
+  --color-subtle: #9c96b8;
+  --color-accent: #b9a6ff; /* links and primary buttons */
+  --color-accent-soft: #d3c8ff;
+  --color-on-accent: #1b1830; /* text on accent backgrounds */
+
+  --font-display: "Bricolage Grotesque Variable", system-ui, sans-serif;
+  --font-sans: "DM Sans Variable", system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-night);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+/* ---------- Page transitions (React <ViewTransition>) ---------- */
+
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-old(.page) {
+  animation: 160ms ease-in both page-out;
+}
+::view-transition-new(.page) {
+  animation: 380ms cubic-bezier(0.22, 0.8, 0.3, 1) 90ms both page-in;
+}
+
+@keyframes page-out {
+  to {
+    opacity: 0;
+    translate: 0 -8px;
+  }
+}
+@keyframes page-in {
+  from {
+    opacity: 0;
+    translate: 0 16px;
+  }
+}
+
+/* Keep the header still while page content transitions. */
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(site-header) {
+  display: none;
+}
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
